@@ -96,37 +96,6 @@ cp .env.example .env.local
 pnpm dev
 ```
 
-## ⚙️ Environment Configuration
-
-# 🎨 Figma Integration (SERVER-SIDE ONLY)
-FIGMA_ACCESS_TOKEN=figd_SUor8zw1rY08EsiZ-oGmOQi3aFmll4IsqwqkgCXk
-
-# 🤖 AI Providers (SERVER-SIDE ONLY)  
-GROQ_API_KEY=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
-OPENAI_API_KEY=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
-OPENAI_MODEL=gpt-4o
-
-# 🐙 GitHub Integration (SERVER-SIDE ONLY)
-GITHUB_CLIENT_ID=Ov23lifMfxZSsNXMcFRY
-GITHUB_CLIENT_SECRET=ea52342c2178679420eeeb0dea9629547bb6a1fc
-
-# 🔧 Application Settings
-NODE_ENV=development
-NEXTAUTH_SECRET=figma-converter-secret-key-2024
-NEXTAUTH_URL=http://localhost:3000
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-
-# 🚀 Performance & Caching
-RATE_LIMIT_REQUESTS_PER_MINUTE=60
-CACHE_TTL_SECONDS=3600
-LOG_LEVEL=info
-
-# 🔒 Security
-ENCRYPTION_KEY=your-encryption-key-here
-
-# 📊 Monitoring (Optional)
-SENTRY_DSN=your-sentry-dsn
-ANALYTICS_ID=your-analytics-id
 
 
 ## 🧪 Development Commands
