@@ -8,9 +8,10 @@ import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Download, Github, CheckCircle, AlertTriangle, Loader2, ExternalLink, Copy, Check } from "lucide-react"
 import { ExportPresetsSelector } from "./export-presets-selector"
-import { EnhancedExportService, type ExportProgress, type GeneratedComponent } from "@/services/enhanced-export-service"
+import { EnhancedExportService, type ExportProgress, type GeneratedComponent, type ExportData } from "@/services/enhanced-export-service"
 import type { ExportPreset } from "@/lib/export-presets"
 import { EnhancedErrorBoundary } from "@/components/enhanced-error-boundary"
+import { SecureTokenStorage } from "@/lib/security"
 
 interface EnhancedExportWizardProps {
   component: GeneratedComponent
@@ -57,15 +58,46 @@ export function EnhancedExportWizard({ component, onExportComplete }: EnhancedEx
       let result: string
 
       if (method === "zip") {
-        await EnhancedExportService.createZipExport(component, selectedPreset)
+        const exportData = {
+          jsx: component.jsx,
+          css: component.css,
+          typescript: component.typescript,
+          componentName: component.componentName,
+          figmaUrl: component.figmaUrl,
+          metadata: {
+            generatedAt: new Date().toISOString(),
+            version: "1.0.0",
+            figmaFile: component.figmaUrl
+          }
+        }
+        await EnhancedExportService.createZipDownload(exportData, { 
+          framework: selectedPreset?.framework || "react",
+          styling: selectedPreset?.styling || "tailwind"
+        })
         result = `${component.componentName}.zip downloaded successfully!`
       } else {
-        const githubToken = localStorage.getItem("github_token")
+        const githubToken = SecureTokenStorage.retrieve("github-token")
         if (!githubToken) {
           throw new Error("GitHub token not found. Please connect your GitHub account first.")
         }
 
-        const repoUrl = await EnhancedExportService.createGitHubExport(component, selectedPreset)
+        const exportData = {
+          jsx: component.jsx,
+          css: component.css,
+          typescript: component.typescript,
+          componentName: component.componentName,
+          figmaUrl: component.figmaUrl,
+          metadata: {
+            generatedAt: new Date().toISOString(),
+            version: "1.0.0",
+            figmaFile: component.figmaUrl
+          }
+        }
+        const repoName = `${component.componentName.toLowerCase()}-component`
+        const repoUrl = await EnhancedExportService.pushToGitHub(exportData, repoName, githubToken, {
+          framework: selectedPreset?.framework || "react",
+          styling: selectedPreset?.styling || "tailwind"
+        })
         result = repoUrl
       }
 

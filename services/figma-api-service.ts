@@ -56,11 +56,17 @@ export class FigmaApiService {
     components: FigmaComponent[]
   }> {
     try {
+      // Get Figma token from localStorage or environment
+      const figmaToken = typeof window !== 'undefined' 
+        ? localStorage.getItem('figma-token') || process.env.NEXT_PUBLIC_FIGMA_ACCESS_TOKEN
+        : process.env.NEXT_PUBLIC_FIGMA_ACCESS_TOKEN
+
       // Call your API route instead of Figma API directly
       const response = await fetch(`/api/figma/file/${fileKey}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          ...(figmaToken && { 'X-Figma-Token': figmaToken }),
         },
       })
 
@@ -86,10 +92,16 @@ export class FigmaApiService {
 
   static async fetchNodeImages(fileKey: string, nodeIds: string[]): Promise<Record<string, string>> {
     try {
+      // Get Figma token from localStorage or environment
+      const figmaToken = typeof window !== 'undefined' 
+        ? localStorage.getItem('figma-token') || process.env.NEXT_PUBLIC_FIGMA_ACCESS_TOKEN
+        : process.env.NEXT_PUBLIC_FIGMA_ACCESS_TOKEN
+
       const response = await fetch(`/api/figma/images/${fileKey}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(figmaToken && { 'X-Figma-Token': figmaToken }),
         },
         body: JSON.stringify({ nodeIds }),
       })

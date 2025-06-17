@@ -87,6 +87,10 @@ export class ExportPresetService {
     return EXPORT_PRESETS
   }
 
+  static getPreset(id: string): ExportPreset | undefined {
+    return EXPORT_PRESETS.find((preset) => preset.id === id)
+  }
+
   static getPresetById(id: string): ExportPreset | undefined {
     return EXPORT_PRESETS.find((preset) => preset.id === id)
   }
