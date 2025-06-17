@@ -121,6 +121,31 @@ export class AICostManager {
     this.loadFromStorage()
   }
 
+  getUsageStats() {
+    const daily = this.getDailyUsage()
+    const monthly = this.getMonthlyUsage()
+    const total = this.usage.reduce((sum, u) => sum + u.cost, 0)
+
+    return {
+      dailyCost: daily.cost,
+      monthlyCost: monthly.cost,
+      totalCost: total,
+      dailyRequests: this.usage.filter(u => u.timestamp > Date.now() - 24 * 60 * 60 * 1000).length,
+      totalRequests: this.usage.length,
+      groqRequests: 0, // TODO: Track separately when implemented
+      openaiRequests: this.usage.length, // For now, assume all are OpenAI
+      openaiCost: total,
+    }
+  }
+
+  getLimits() {
+    return {
+      daily: this.limits.daily,
+      monthly: this.limits.monthly,
+      perRequest: this.limits.perRequest,
+    }
+  }
+
   getUsageReport() {
     const daily = this.getDailyUsage()
     const monthly = this.getMonthlyUsage()

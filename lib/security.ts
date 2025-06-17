@@ -29,7 +29,19 @@ export const ComponentNameSchema = z
   .string()
   .min(1, "Component name is required")
   .max(50, "Component name too long")
-  .regex(/^[A-Z][a-zA-Z0-9]*$/, "Component name must be PascalCase")
+  .transform((str) => {
+    // Auto-convert to PascalCase if needed
+    if (!/^[A-Z][a-zA-Z0-9]*$/.test(str)) {
+      return str
+        .replace(/[^a-zA-Z0-9]/g, ' ') // Replace special chars with spaces
+        .split(' ')
+        .filter(word => word.length > 0)
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join('')
+    }
+    return str
+  })
+  .refine((str) => /^[A-Z][a-zA-Z0-9]*$/.test(str), "Component name must be PascalCase")
 
 // Rate limiting
 class RateLimiter {

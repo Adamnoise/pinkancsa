@@ -43,7 +43,7 @@ export class GroqClient {
         apiKey ||
         process.env.NEXT_PUBLIC_GROQ_API_KEY ||
         clientSideApiKey ||
-        "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",
+        "",
       baseURL: "https://api.groq.com/openai/v1",
       model: "llama-3.1-70b-versatile",
     }
@@ -58,8 +58,8 @@ export class GroqClient {
       stream?: boolean
     } = {},
   ): Promise<string> {
-    if (!this.config.apiKey) {
-      throw new Error("Groq API key not found. Please set NEXT_PUBLIC_GROQ_API_KEY or add it in settings.")
+    if (!this.config.apiKey || this.config.apiKey.trim() === "") {
+      throw new Error("Groq API key not found. Please set NEXT_PUBLIC_GROQ_API_KEY environment variable or add your API key in the settings.")
     }
 
     if (options.stream) {
